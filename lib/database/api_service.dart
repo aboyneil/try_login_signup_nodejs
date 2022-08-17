@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:try_login_signup_nodejs/models/accounts.models.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
+import 'package:dio/dio.dart';
 
 class APIService {
   static var client = http.Client();
@@ -23,7 +27,38 @@ class APIService {
     }
   }
 
-  static Future<bool> saveProduct(
+  static Future newSaveProduct(AccountModel model, BuildContext context) async {
+    Dio dio = Dio();
+    var productURL = Config.productURL;
+    var url = Uri.http(Config.apiURL, productURL);
+    try {
+      return await dio.post(
+        url.toString(),
+        data: {
+          "name": model.name,
+          "username": model.username,
+          "email": model.email,
+          "mobileNumber": model.mobileNumber,
+          "password": model.password,
+        },
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        }),
+      );
+    } on DioError catch (e) {
+      FormHelper.showSimpleAlertDialog(
+        context,
+        Config.appName,
+        e.response!.data['message'],
+        "Ok",
+        () {
+          Navigator.of(context).pop();
+        },
+      );
+    }
+  }
+
+  static Future saveProduct(
     AccountModel model,
   ) async {
     var productURL = Config.productURL;

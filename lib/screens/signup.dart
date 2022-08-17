@@ -180,29 +180,45 @@ class _SignUpState extends State<SignUp> {
                           ),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              APIService.saveProduct(model).then((response) {
-                                if (response) {
-                                  FormHelper.showSimpleAlertDialog(
-                                    context,
-                                    Config.appName,
-                                    "Registered Successfully",
-                                    "Ok",
-                                    () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                } else {
-                                  FormHelper.showSimpleAlertDialog(
-                                    context,
-                                    Config.appName,
-                                    "Error Occured",
-                                    "Ok",
-                                    () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                }
-                              });
+                              APIService.newSaveProduct(model, context)
+                                  .then((value) => {
+                                        if (value.toString() == "success")
+                                          {
+                                            FormHelper.showSimpleAlertDialog(
+                                              context,
+                                              Config.appName,
+                                              "Account Registered",
+                                              "Ok",
+                                              () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          }
+                                      });
+
+                              // APIService.saveProduct(model).then((response) {
+                              //   if (response) {
+                              //     FormHelper.showSimpleAlertDialog(
+                              //       context,
+                              //       Config.appName,
+                              //       "Registered Successfully",
+                              //       "Ok",
+                              //       () {
+                              //         Navigator.of(context).pop();
+                              //       },
+                              //     );
+                              //   } else if (!response) {
+                              //     FormHelper.showSimpleAlertDialog(
+                              //       context,
+                              //       Config.appName,
+                              //       "Error Occured",
+                              //       "Ok",
+                              //       () {
+                              //         Navigator.of(context).pop();
+                              //       },
+                              //     );
+                              //   }
+                              // });
                             }
                           },
                           child: const Text("Sign-up"),
